@@ -2,16 +2,16 @@ import './setting.css';
 import { paramType } from '../../../../types/types';
 import DivCreateView from './create/create-view';
 import DivUpdateView from './update/update-view';
-import DivControlView from './control/control-view';
+import DivPlayView from './play/play-view';
 
 class DivSettingView {
     divCreateView: DivCreateView;
     divUpdateView: DivUpdateView;
-    divControlView: DivControlView;
+    divPlayView: DivPlayView;
     constructor() {
         this.divCreateView = new DivCreateView();
         this.divUpdateView = new DivUpdateView();
-        this.divControlView = new DivControlView();
+        this.divPlayView = new DivPlayView();
         this.createDivSetting();
     }
     htmlTeg: paramType = {
@@ -32,8 +32,8 @@ class DivSettingView {
         const divSetting: HTMLElement | null = this.createDivSetting();
         const divSCreate: HTMLElement | null = this.divCreateView.appendDivCreateView();
         const divUpdate: HTMLElement | null = this.divUpdateView.appendDivUpdateView();
-        const divControl: HTMLElement | null = this.divControlView.appendDivControlView();
-        divSetting.append(divSCreate, divUpdate, divControl);
+        const divPlay: HTMLElement | null = this.divPlayView.appendDivPlayView();
+        divSetting.append(divSCreate, divUpdate, divPlay);
         return divSetting;
     }
 }

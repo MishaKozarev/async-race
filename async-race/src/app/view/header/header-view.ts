@@ -7,7 +7,7 @@ class HeaderView {
     }
     htmlTeg: paramType = {
         header: 'header',
-        btn: 'a',
+        btn: 'button',
     };
     cssClasses: paramType = {
         header: 'header',
@@ -43,7 +43,6 @@ class HeaderView {
         const btnGarage: HTMLElement | null = this.createHeaderBtnGarage();
         const btnWinner: HTMLElement | null = this.createHeaderBtnWinner();
         header.append(btnGarage, btnWinner);
-        console.log(btnGarage);
         return header;
     }
 }

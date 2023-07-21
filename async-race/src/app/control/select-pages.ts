@@ -1,16 +1,20 @@
 class SelectPages {
+    constructor() {
+        this.setSelect();
+    }
     setSelect() {
         const btnGarage: HTMLElement | null = document.querySelector('.btn-garage');
         const btnWinner: HTMLElement | null = document.querySelector('.btn-winner');
+        const garage: HTMLElement | null = document.querySelector('.garage');
+        const winner: HTMLElement | null = document.querySelector('.winner');
         btnGarage?.addEventListener('click', () => {
-            btnGarage.classList.add('select');
-            btnWinner?.classList.remove('select');
+            if (garage) garage.style.display = 'block';
+            if (winner) winner.style.display = 'none';
         });
         btnWinner?.addEventListener('click', () => {
-            btnWinner.classList.add('select');
-            btnGarage?.classList.remove('select');
+            if (garage) garage.style.display = 'none';
+            if (winner) winner.style.display = 'block';
         });
-        console.log(btnGarage);
     }
 }
 

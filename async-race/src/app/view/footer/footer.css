@@ -5,3 +5,9 @@
     height: 5vh;
     border: 1px solid white;
 }
+
+.btn-prev,
+.btn-next {
+    margin-left: 20px;
+    background: rgb(106, 243, 236);
+}
