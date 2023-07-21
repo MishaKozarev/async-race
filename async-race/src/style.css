@@ -7,7 +7,151 @@ body {
     padding: 0;
     margin: 0;
     color: beige;
+    box-sizing: border-box;
+    min-width: 460px;
 }
+
 button {
     cursor: pointer;
+     margin: 5px;
+
+}
+
+.update__input-color,
+.create__input-color{
+    height: 20px;
+}
+
+.update__input-text,
+.create__input-text{
+    height: 15px;
+}
+
+.header {
+    height: 5vh;
+    padding: 15px;
+}
+
+.btn-garage,
+.btn-winner {
+    width: 100px;
+    height: 25px;
+    background: rgb(49, 231, 25);
+    margin-right: 10px;
+}
+
+.main {
+    width: 100vw;
+    height: 90vh;
+}
+
+.section-garage {
+    display: block;
+    padding: 0 20px;
+}
+
+.control {
+    width: 400px;
+    height: 100px;
+    display: grid;
+    grid-template-columns: 50% 20% 30%;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 7px;
+}
+
+.btn-race {
+    background: rgb(25, 231, 231);
+}
+
+.btn-create,
+.btn-update {
+    background: rgb(76, 238, 62);
+}
+
+.btn-reset {
+    background: rgb(255, 252, 83);
+}
+
+.btn-generate {
+    background: rgb(239, 80, 245);
+}
+
+.track {
+    position: relative;
+    height: 70px;
+    border-bottom: dotted;
+    margin-bottom: 30px;
+}
+
+.car-image {
+    width: 100px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transition: all 2s ease-in-out;
+}
+
+.car-image.go {
+    transform: translate(89vw,0);
+    transition: all 2s ease-in-out;
+}
+
+.flag {
+    width: 40px;
+    height: 40px;
+    background-image: url(../src/assets/flag.png);
+    background-size: 40px 40px;
+    position: absolute;
+    right: 100px;
+    bottom: 0;
+}
+
+.btn-select,
+.btn-remove {
+    background: rgb(25, 231, 231);
+}
+
+
+.btn-start,
+.btn-stop {
+    width: 60px;
+    height: 20px;
+    border-radius: 1px;
+    background: rgb(39, 38, 38);
+    margin-right: 10px;
+    color: beige;
+}
+
+.btn-start:hover,
+.btn-stop:hover {
+    color: aqua;
+}
+
+.track__race {
+    width: 90%;
+    display: flex;
+    justify-content: end;
+}
+
+.section-winner {
+    display: none;
+    padding: 20px;
+}
+
+table {
+    border-collapse: collapse;
+  }
+
+th,
+td {
+    border: #413a3a9a 3px solid;
+    padding: 2px;
+    min-width: 50px;
+    color: rgb(0, 0, 0);
+    background: white;
+}
+
+.footer {
+    height: 5vh;
+    padding: 20px;
 }
