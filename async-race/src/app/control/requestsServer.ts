@@ -1,13 +1,18 @@
 import baseUrl from '../data/baseUrlData';
 import paths from '../data/pathsData';
 import { cars } from '../types/types';
+import changeData from '../data/changeData';
 
 class RequestsServer {
-    async getCars(id?: number): Promise<cars[]> {
-        const response = id ? await fetch(`${baseUrl}${paths.garage}/${id}`) : await fetch(`${baseUrl}${paths.garage}`);
-        const data = await response.json();
-        console.log(data);
-        return data;
+    async getCars(id?: string, page?: string): Promise<[cars[] | cars, string, string]> {
+        const currentPage: string = page || `${changeData.pageCarsNumber}`;
+        const response: Response = id
+            ? await fetch(`${baseUrl}${paths.garage}/${id}`)
+            : await fetch(`${baseUrl}${paths.garage}?_page=${currentPage}&_limit=7`);
+        const data: cars[] | cars = await response.json();
+        const carsCount = response.headers.get('X-Total-Count') as string;
+        console.log(currentPage);
+        return [data, carsCount, currentPage];
     }
 
     async createCar(name: string, color: string): Promise<cars[]> {

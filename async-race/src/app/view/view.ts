@@ -73,10 +73,11 @@ class View {
         const numGarage: HTMLElement = this.createElem(view.html.h2, view.css.numGarage, view.text.numGarage);
         const btnPrev: HTMLElement = this.createElem(view.html.btn, view.css.btnPrev, view.text.btnPrev);
         const btnNext: HTMLElement = this.createElem(view.html.btn, view.css.btnNext, view.text.btnNext);
+        const containerTracks: HTMLElement = this.createElem(view.html.div, view.css.container);
         this.body?.append(header, main, footer);
         header.append(btnGarage, btnWinner);
         main.append(this.sectionGarage, sectionWinner);
-        this.sectionGarage.append(divControl, countGarage, numGarage);
+        this.sectionGarage.append(divControl, countGarage, numGarage, containerTracks);
         divControl.append(
             inputTextCreate,
             inputColorCreate,
@@ -102,6 +103,7 @@ class View {
     }
 
     createTrack(id: number, carColor: string, carName: string, carModel?: string): void {
+        const containerTracks: HTMLElement = document.querySelector('.container') as HTMLElement;
         const divTrack: HTMLElement = this.createElemTrack(view.html.div, view.css.divTrack, `${id}`);
         const carNameModel: string = carModel ? `${carName} ${carModel}` : carName;
         const carImage: HTMLOrSVGImageElement = this.createElem(view.html.div, view.css.carImage) as HTMLImageElement;
@@ -114,12 +116,29 @@ class View {
         const flagFinish: HTMLElement = this.createElem(view.html.div, view.css.flag);
         divTrack.append(btnStart, btnStop, btnSelect, btnRemove, spanCarName, carImage, flagFinish);
         (divTrack.children[5].children[0].children[0] as HTMLElement).style.fill = carColor;
-        this.sectionGarage.append(divTrack);
+        containerTracks.append(divTrack);
     }
 
-    async addTrack(promise: Promise<cars[]>) {
-        const result: cars[] = await promise;
-        result.forEach((value) => this.createTrack(value.id, value.color, value.name));
+    async addTrack(cars: Promise<[cars[] | cars, string, string]>): Promise<void> {
+        const result: [cars[] | cars, string, string] = await cars;
+        const carsNumber: string = result[1];
+        const pageNumber: string = result[2];
+        const carsOnPage = 7;
+        const containerTracks: HTMLElement = document.querySelector('.container') as HTMLElement;
+        const btnPrev: HTMLButtonElement = document.querySelector('.btn-prev') as HTMLButtonElement;
+        const btnNext: HTMLButtonElement = document.querySelector('.btn-next') as HTMLButtonElement;
+        if (containerTracks) containerTracks.innerHTML = '';
+        changeData.pageCarsNumber = pageNumber;
+        (result[0] as cars[]).forEach((item) => {
+            this.createTrack(item.id, item.color, item.name);
+        });
+        const titleGarage = document.querySelector('.title-garage') as HTMLElement;
+        const subtitleGarage = document.querySelector('.subtitle-garage') as HTMLElement;
+        titleGarage.innerText = `Garage (${carsNumber})`;
+        subtitleGarage.innerHTML = `Page #${pageNumber}`;
+        btnNext.disabled = !(Number(carsNumber) > carsOnPage);
+        btnNext.disabled = !(Math.ceil(Number(carsNumber) / carsOnPage) > Number(pageNumber));
+        btnPrev.disabled = Number(pageNumber) === 1;
     }
 
     async deleteTrack(id: Promise<string>) {

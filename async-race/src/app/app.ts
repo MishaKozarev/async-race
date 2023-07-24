@@ -1,6 +1,7 @@
 import View from './view/view';
 import SelectPages from './control/select-pages';
 import RequestsServer from './control/requestsServer';
+import changeData from './data/changeData';
 
 class App {
     view: View;
@@ -19,6 +20,7 @@ class App {
         this.addEventsOnClickButtonCreate();
         this.removeEventsOnClickButtonCreate();
         this.updateEventsOnClickButtonCreate();
+        this.addChangePageButtonsLogic();
     }
 
     addEventsOnClickButtonCreate() {
@@ -29,8 +31,9 @@ class App {
                 const inputTextCreate: HTMLInputElement | null = document.querySelector('.create__input-text');
                 const carName: string = (inputTextCreate as HTMLInputElement).value;
                 const carColor: string = (inputColorCreate as HTMLInputElement).value;
-                this.view.addTrack(this.requestServer.createCar(carName, carColor));
-                this.go();
+                this.requestServer
+                    .createCar(carName, carColor)
+                    .then(() => this.view.addTrack(this.requestServer.getCars()));
             });
     }
 
@@ -53,8 +56,9 @@ class App {
                 const carName: string = (inputTextUpdate as HTMLInputElement).value;
                 const carColor: string = (inputColorUpdate as HTMLInputElement).value;
                 const currentId = localStorage.getItem('currentIdStorage');
-                this.requestServer.updateCar(`${currentId}`, carName, carColor);
-                location.reload();
+                this.requestServer
+                    .updateCar(`${currentId}`, carName, carColor)
+                    .then(() => this.view.addTrack(this.requestServer.getCars()));
             }
         });
     }
@@ -75,10 +79,20 @@ class App {
     go() {
         const track: HTMLElement | null = document.querySelector('.track');
         const car: HTMLElement | null = document.querySelector('.car-image');
-        console.log(track, car);
         track?.addEventListener('click', (event) => {
             if ((event.target as HTMLElement).classList.contains('btn-start')) {
                 car?.classList.add('go');
+            }
+        });
+    }
+
+    addChangePageButtonsLogic(): void {
+        document.querySelector('.footer')?.addEventListener('click', (event) => {
+            if ((event.target as HTMLElement).classList.contains('btn-next')) {
+                this.view.addTrack(this.requestServer.getCars('', `${+changeData.pageCarsNumber + 1}`));
+            }
+            if ((event.target as HTMLElement).classList.contains('btn-prev')) {
+                this.view.addTrack(this.requestServer.getCars('', `${+changeData.pageCarsNumber - 1}`));
             }
         });
     }
