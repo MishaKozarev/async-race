@@ -1,19 +1,27 @@
-import data from '../data/htmlData';
-import carSvgImg from '../data/carSvgImg';
+import view from '../data/viewData';
+import carSvg from '../data/carSvgData';
+import changeData from '../data/changeData';
+import { cars } from '../types/types';
 
 class View {
     body: HTMLBodyElement | null;
     sectionGarage: HTMLElement;
-
     constructor() {
         this.body = document.querySelector('body');
-        this.sectionGarage = this.createElem(data.html.section, data.css.sectionGarage);
+        this.sectionGarage = this.createElem(view.html.section, view.css.sectionGarage);
     }
 
     createElem(tagName: string, cssClass: string, text?: string) {
         const element = document.createElement(`${tagName}`);
         element.className = cssClass;
         if (text) element.textContent = text;
+        return element;
+    }
+
+    createElemTrack(tagName: string, cssClass: string, id: string) {
+        const element = document.createElement(`${tagName}`);
+        element.className = cssClass;
+        element.id = id;
         return element;
     }
 
@@ -25,46 +33,46 @@ class View {
     }
 
     createPage() {
-        const header: HTMLElement = this.createElem(data.html.header, data.css.header);
-        const main: HTMLElement = this.createElem(data.html.main, data.css.main);
-        const footer: HTMLElement = this.createElem(data.html.footer, data.css.footer);
-        const sectionWinner: HTMLElement = this.createElem(data.html.section, data.css.sectionWinner);
-        const btnGarage: HTMLElement = this.createElem(data.html.btn, data.css.btnGarage, data.text.btnGarage);
-        const btnWinner: HTMLElement = this.createElem(data.html.btn, data.css.btnWinner, data.text.btnWinner);
-        const divControl: HTMLElement = this.createElem(data.html.div, data.css.control);
+        const header: HTMLElement = this.createElem(view.html.header, view.css.header);
+        const main: HTMLElement = this.createElem(view.html.main, view.css.main);
+        const footer: HTMLElement = this.createElem(view.html.footer, view.css.footer);
+        const sectionWinner: HTMLElement = this.createElem(view.html.section, view.css.sectionWinner);
+        const btnGarage: HTMLElement = this.createElem(view.html.btn, view.css.btnGarage, view.text.btnGarage);
+        const btnWinner: HTMLElement = this.createElem(view.html.btn, view.css.btnWinner, view.text.btnWinner);
+        const divControl: HTMLElement = this.createElem(view.html.div, view.css.control);
         const inputTextCreate: HTMLElement = this.createInput(
-            data.html.input,
-            data.css.inputTextCreate,
-            data.attr.type,
-            data.nameAttr.text
+            view.html.input,
+            view.css.inputTextCreate,
+            view.attr.type,
+            view.nameAttr.text
         );
         const inputColorCreate: HTMLElement = this.createInput(
-            data.html.input,
-            data.css.inputColorCreate,
-            data.attr.type,
-            data.nameAttr.color
+            view.html.input,
+            view.css.inputColorCreate,
+            view.attr.type,
+            view.nameAttr.color
         );
-        const btnCreate: HTMLElement = this.createElem(data.html.btn, data.css.btnCreate, data.text.btnCreate);
+        const btnCreate: HTMLElement = this.createElem(view.html.btn, view.css.btnCreate, view.text.btnCreate);
         const inputTextUpdate: HTMLElement = this.createInput(
-            data.html.input,
-            data.css.inputTextUpdate,
-            data.attr.type,
-            data.nameAttr.text
+            view.html.input,
+            view.css.inputTextUpdate,
+            view.attr.type,
+            view.nameAttr.text
         );
         const inputColorUpdate: HTMLElement = this.createInput(
-            data.html.input,
-            data.css.inputColorUpdate,
-            data.attr.type,
-            data.nameAttr.color
+            view.html.input,
+            view.css.inputColorUpdate,
+            view.attr.type,
+            view.nameAttr.color
         );
-        const btnUpdate: HTMLElement = this.createElem(data.html.btn, data.css.btnUpdate, data.text.btnUpdate);
-        const btnRace: HTMLElement = this.createElem(data.html.btn, data.css.btnRace, data.text.btnRace);
-        const btnReset: HTMLElement = this.createElem(data.html.btn, data.css.btnReset, data.text.btnReset);
-        const btnGenerate: HTMLElement = this.createElem(data.html.btn, data.css.btnGenerate, data.text.btnGenerate);
-        const countGarage: HTMLElement = this.createElem(data.html.h2, data.css.countGarage, data.text.countGarage);
-        const numGarage: HTMLElement = this.createElem(data.html.h2, data.css.numGarage, data.text.numGarage);
-        const btnPrev: HTMLElement = this.createElem(data.html.btn, data.css.btnPrev, data.text.btnPrev);
-        const btnNext: HTMLElement = this.createElem(data.html.btn, data.css.btnNext, data.text.btnNext);
+        const btnUpdate: HTMLElement = this.createElem(view.html.btn, view.css.btnUpdate, view.text.btnUpdate);
+        const btnRace: HTMLElement = this.createElem(view.html.btn, view.css.btnRace, view.text.btnRace);
+        const btnReset: HTMLElement = this.createElem(view.html.btn, view.css.btnReset, view.text.btnReset);
+        const btnGenerate: HTMLElement = this.createElem(view.html.btn, view.css.btnGenerate, view.text.btnGenerate);
+        const countGarage: HTMLElement = this.createElem(view.html.h2, view.css.countGarage, view.text.countGarage);
+        const numGarage: HTMLElement = this.createElem(view.html.h2, view.css.numGarage, view.text.numGarage);
+        const btnPrev: HTMLElement = this.createElem(view.html.btn, view.css.btnPrev, view.text.btnPrev);
+        const btnNext: HTMLElement = this.createElem(view.html.btn, view.css.btnNext, view.text.btnNext);
         this.body?.append(header, main, footer);
         header.append(btnGarage, btnWinner);
         main.append(this.sectionGarage, sectionWinner);
@@ -80,33 +88,52 @@ class View {
             btnReset,
             btnGenerate
         );
-        const countWinner: HTMLElement = this.createElem(data.html.h2, data.css.countGarage, data.text.countGarage);
-        const numWinner: HTMLElement = this.createElem(data.html.h2, data.css.numWinner, data.text.numWinner);
-        const table: HTMLElement = this.createElem(data.html.table, data.css.table);
-        const thNumber: HTMLElement = this.createElem(data.html.th, data.css.th, data.text.number);
-        const thCar: HTMLElement = this.createElem(data.html.th, data.css.th, data.text.car);
-        const thName: HTMLElement = this.createElem(data.html.th, data.css.th, data.text.name);
-        const thWinner: HTMLElement = this.createElem(data.html.th, data.css.th, data.text.winner);
-        const thBestTime: HTMLElement = this.createElem(data.html.th, data.css.th, data.text.best);
+        const countWinner: HTMLElement = this.createElem(view.html.h2, view.css.countGarage, view.text.countGarage);
+        const numWinner: HTMLElement = this.createElem(view.html.h2, view.css.numWinner, view.text.numWinner);
+        const table: HTMLElement = this.createElem(view.html.table, view.css.table);
+        const thNumber: HTMLElement = this.createElem(view.html.th, view.css.th, view.text.number);
+        const thCar: HTMLElement = this.createElem(view.html.th, view.css.th, view.text.car);
+        const thName: HTMLElement = this.createElem(view.html.th, view.css.th, view.text.name);
+        const thWinner: HTMLElement = this.createElem(view.html.th, view.css.th, view.text.winner);
+        const thBestTime: HTMLElement = this.createElem(view.html.th, view.css.th, view.text.best);
         sectionWinner.append(countWinner, numWinner, table);
         table.append(thNumber, thCar, thName, thWinner, thBestTime);
         footer.append(btnPrev, btnNext);
     }
 
-    createTrack(carColor: string, carName: string, carModel?: string): void {
-        const divTrack: HTMLElement = this.createElem(data.html.div, data.css.divTrack);
+    createTrack(id: number, carColor: string, carName: string, carModel?: string): void {
+        const divTrack: HTMLElement = this.createElemTrack(view.html.div, view.css.divTrack, `${id}`);
         const carNameModel: string = carModel ? `${carName} ${carModel}` : carName;
-        const carImage: HTMLOrSVGImageElement = this.createElem(data.html.div, data.css.carImage) as HTMLImageElement;
-        carImage.innerHTML = carSvgImg;
-        const spanCarName: HTMLElement = this.createElem(data.html.span, data.css.carName, `${carNameModel}`);
-        const btnStart: HTMLElement = this.createElem(data.html.btn, data.css.btnStart, data.text.btnStart);
-        const btnStop: HTMLElement = this.createElem(data.html.btn, data.css.btnStop, data.text.btnStop);
-        const btnSelect: HTMLElement = this.createElem(data.html.btn, data.css.btnSelect, data.text.btnSelect);
-        const btnRemove: HTMLElement = this.createElem(data.html.btn, data.css.btnRemove, data.text.btnRemove);
-        const flagFinish: HTMLElement = this.createElem(data.html.div, data.css.flag);
+        const carImage: HTMLOrSVGImageElement = this.createElem(view.html.div, view.css.carImage) as HTMLImageElement;
+        carImage.innerHTML = carSvg;
+        const spanCarName: HTMLElement = this.createElem(view.html.span, view.css.carName, `${carNameModel}`);
+        const btnStart: HTMLElement = this.createElem(view.html.btn, view.css.btnStart, view.text.btnStart);
+        const btnStop: HTMLElement = this.createElem(view.html.btn, view.css.btnStop, view.text.btnStop);
+        const btnSelect: HTMLElement = this.createElem(view.html.btn, view.css.btnSelect, view.text.btnSelect);
+        const btnRemove: HTMLElement = this.createElem(view.html.btn, view.css.btnRemove, view.text.btnRemove);
+        const flagFinish: HTMLElement = this.createElem(view.html.div, view.css.flag);
         divTrack.append(btnStart, btnStop, btnSelect, btnRemove, spanCarName, carImage, flagFinish);
-        this.sectionGarage.append(divTrack);
         (divTrack.children[5].children[0].children[0] as HTMLElement).style.fill = carColor;
+        this.sectionGarage.append(divTrack);
+    }
+
+    async addTrack(promise: Promise<cars[]>) {
+        const result: cars[] = await promise;
+        result.forEach((value) => this.createTrack(value.id, value.color, value.name));
+    }
+
+    async deleteTrack(id: Promise<string>) {
+        document.getElementById(await id)?.remove();
+    }
+
+    async updateDataTrack(car: Promise<[cars[] | cars, string, string]>): Promise<void> {
+        const result: [cars[] | cars, string, string] = await car;
+        const carData = result[0];
+        const inputTextUpdate = document.querySelector('.update__input-text') as HTMLInputElement;
+        const inputColorUpdate = document.querySelector('.update__input-color') as HTMLInputElement;
+        inputTextUpdate.value = (carData as cars).name;
+        inputColorUpdate.value = (carData as cars).color;
+        changeData.idUpdate = String((carData as cars).id);
     }
 }
 export default View;

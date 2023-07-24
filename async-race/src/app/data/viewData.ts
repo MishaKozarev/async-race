@@ -1,4 +1,4 @@
-const data = {
+const view = {
     html: {
         header: 'header',
         main: 'main',
@@ -48,6 +48,7 @@ const data = {
         table: 'table',
         th: 'th',
         flag: 'flag',
+        raceBlock: 'race-block',
     },
     text: {
         btnGarage: 'TO GARAGE',
@@ -82,4 +83,4 @@ const data = {
     },
 };
 
-export default data;
+export default view;
