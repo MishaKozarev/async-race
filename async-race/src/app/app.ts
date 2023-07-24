@@ -1,7 +1,6 @@
 import View from './view/view';
 import SelectPages from './control/select-pages';
 import RequestsServer from './control/requestsServer';
-import changeData from './data/changeData';
 
 class App {
     view: View;
@@ -16,8 +15,10 @@ class App {
         this.view.createPage();
         this.view.addTrack(this.requestServer.getCars());
         this.selectPage.setSelect();
+        this.getCurrentId();
         this.addEventsOnClickButtonCreate();
         this.removeEventsOnClickButtonCreate();
+        this.updateEventsOnClickButtonCreate();
     }
 
     addEventsOnClickButtonCreate() {
@@ -49,9 +50,24 @@ class App {
             if ((btnUpdate.target as HTMLElement).classList.contains('btn-update')) {
                 const inputColorUpdate: HTMLInputElement | null = document.querySelector('.update__input-color');
                 const inputTextUpdate: HTMLInputElement | null = document.querySelector('.update__input-text');
-                const carName: string = (inputColorUpdate as HTMLInputElement).value;
-                const carColor: string = (inputTextUpdate as HTMLInputElement).value;
-                this.requestServer.updateCar(changeData.idUpdate, carName, carColor);
+                const carName: string = (inputTextUpdate as HTMLInputElement).value;
+                const carColor: string = (inputColorUpdate as HTMLInputElement).value;
+                const currentId = localStorage.getItem('currentIdStorage');
+                this.requestServer.updateCar(`${currentId}`, carName, carColor);
+                location.reload();
+            }
+        });
+    }
+
+    getCurrentId() {
+        const sectionGarage = document.querySelector('.section-garage') as HTMLElement;
+        sectionGarage.addEventListener('click', (btnSelect) => {
+            if ((btnSelect.target as HTMLElement).classList.contains('btn-select')) {
+                (btnSelect.target as HTMLButtonElement).disabled = true;
+                localStorage.setItem(
+                    'currentIdStorage',
+                    `${((btnSelect.target as HTMLElement).parentNode as HTMLElement).id}`
+                );
             }
         });
     }
