@@ -175,7 +175,6 @@ class View {
         }
         const time: number = carFeature.distance / carFeature.velocity;
         const distance: number = +(carBlock.children[5] as HTMLElement).offsetWidth - 100;
-        (carBlock.children[5].children[0] as HTMLElement).style.left = '150px';
         const anim: Animation = (carBlock.children[5].children[0] as HTMLElement).animate(
             [{ left: '0px' }, { left: `${distance}px` }],
             { duration: time, fill: 'forwards' }
