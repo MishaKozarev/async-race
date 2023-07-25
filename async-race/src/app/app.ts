@@ -2,6 +2,7 @@ import View from './view/view';
 import SelectPages from './control/select-pages';
 import RequestsServer from './control/requestsServer';
 import changeData from './data/changeData';
+import { cars } from './types/types';
 
 class App {
     view: View;
@@ -20,7 +21,10 @@ class App {
         this.addEventsOnClickButtonCreate();
         this.removeEventsOnClickButtonCreate();
         this.updateEventsOnClickButtonCreate();
-        this.addChangePageButtonsLogic();
+        this.updateEventsOnClickButtonТNext();
+        this.addEventsOnClickButtonStart();
+        this.getRecordsAnimations();
+        this.addEventsOnClickButtonRace();
     }
 
     addEventsOnClickButtonCreate() {
@@ -76,17 +80,7 @@ class App {
         });
     }
 
-    go() {
-        const track: HTMLElement | null = document.querySelector('.track');
-        const car: HTMLElement | null = document.querySelector('.car-image');
-        track?.addEventListener('click', (event) => {
-            if ((event.target as HTMLElement).classList.contains('btn-start')) {
-                car?.classList.add('go');
-            }
-        });
-    }
-
-    addChangePageButtonsLogic(): void {
+    updateEventsOnClickButtonТNext(): void {
         document.querySelector('.footer')?.addEventListener('click', (event) => {
             if ((event.target as HTMLElement).classList.contains('btn-next')) {
                 this.view.addTrack(this.requestServer.getCars('', `${+changeData.pageCarsNumber + 1}`));
@@ -95,6 +89,40 @@ class App {
                 this.view.addTrack(this.requestServer.getCars('', `${+changeData.pageCarsNumber - 1}`));
             }
         });
+    }
+
+    addEventsOnClickButtonStart(): void {
+        document.querySelector('.container')?.addEventListener('click', async (event) => {
+            const parentId: string = ((event.target as HTMLElement).parentNode as HTMLElement).id;
+            if ((event.target as HTMLElement).classList.contains('btn-start')) {
+                this.view
+                    .startAnimation(parentId, this.requestServer.startStopEngine(parentId, 'started'))
+                    .then(() => this.requestServer.carRun(parentId).catch(() => this.view.stopAnimation(parentId)));
+            }
+            if ((event.target as HTMLElement).classList.contains('btn-stop')) {
+                this.view.startAnimation(parentId, this.requestServer.startStopEngine(parentId, 'stopped'));
+            }
+        });
+    }
+
+    addEventsOnClickButtonRace() {
+        const sectionGarage = document.querySelector('.section-garage') as HTMLElement;
+        sectionGarage.addEventListener('click', async (btnRace) => {
+            if ((btnRace.target as HTMLElement).classList.contains('btn-race')) {
+                console.log(btnRace.target);
+                ((await this.requestServer.getCars())[0] as cars[]).forEach((item) => {
+                    this.view
+                        .startAnimation(`${item.id}`, this.requestServer.startStopEngine(`${item.id}`, 'started'))
+                        .then(() =>
+                            this.requestServer.carRun(`${item.id}`).catch(() => this.view.stopAnimation(`${item.id}`))
+                        );
+                });
+            }
+        });
+    }
+
+    getRecordsAnimations() {
+        return localStorage.setItem('RecordsAnimations', JSON.stringify([]));
     }
 }
 export default App;

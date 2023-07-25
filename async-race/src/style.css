@@ -84,7 +84,7 @@ button {
     margin-bottom: 10px;
 }
 
-.car-image {
+.car-image svg{
     width: 100px;
     position: absolute;
     left: 0;
@@ -155,4 +155,8 @@ td {
 .footer {
     height: 5vh;
     padding: 20px;
+}
+
+.go {
+    transform: translate(350px,0);
 }

@@ -1,7 +1,8 @@
 import view from '../data/viewData';
 import carSvg from '../data/carSvgData';
 import changeData from '../data/changeData';
-import { cars } from '../types/types';
+import { cars, engine, records } from '../types/types';
+// import AnimationRecord from '../data/animation';
 
 class View {
     body: HTMLBodyElement | null;
@@ -153,6 +154,47 @@ class View {
         inputTextUpdate.value = (carData as cars).name;
         inputColorUpdate.value = (carData as cars).color;
         changeData.idUpdate = String((carData as cars).id);
+    }
+
+    async startAnimation(id: string, carEnginData: Promise<engine>): Promise<void> {
+        const carFeature: engine = await carEnginData;
+        const carBlock: HTMLElement = document.getElementById(id) as HTMLElement;
+        let recordsAnimation: records[] = [];
+        if (carFeature.velocity === 0) {
+            const newRecordsAnimation: records[] = [];
+            recordsAnimation.forEach((item) => {
+                if (item.id !== +id) {
+                    newRecordsAnimation.push(item);
+                } else {
+                    item.animation.cancel();
+                }
+            });
+            recordsAnimation = newRecordsAnimation;
+            (carBlock.children[5].children[0] as HTMLElement).style.left = '0';
+            return;
+        }
+        const time: number = carFeature.distance / carFeature.velocity;
+        const distance: number = +(carBlock.children[5] as HTMLElement).offsetWidth - 100;
+        (carBlock.children[5].children[0] as HTMLElement).style.left = '150px';
+        const anim: Animation = (carBlock.children[5].children[0] as HTMLElement).animate(
+            [{ left: '0px' }, { left: `${distance}px` }],
+            { duration: time, fill: 'forwards' }
+        );
+        recordsAnimation.push({ id: +id, time: +(time / 1000).toFixed(2), animation: anim });
+        console.log(recordsAnimation);
+    }
+
+    async stopAnimation(id: string): Promise<void> {
+        const carBlock: HTMLElement = document.getElementById(id) as HTMLElement;
+        const carPosition: number = carBlock.children[5].children[0].getBoundingClientRect().left;
+        (carBlock.children[5].children[0] as HTMLElement).style.left = `${carPosition}px`;
+        const recordsAnimation: records[] = [];
+        recordsAnimation.forEach((item) => {
+            if (item.id === +id) {
+                item.time = Infinity;
+                item.animation.cancel();
+            }
+        });
     }
 }
 export default View;

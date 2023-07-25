@@ -15,3 +15,15 @@ export type Paths = {
     engine: string;
     winners: string;
 };
+
+export type engine = {
+    velocity: number;
+    distance: number;
+};
+
+export type records = {
+    id: number;
+    time: number;
+    animation: Animation;
+    wins?: number;
+};
