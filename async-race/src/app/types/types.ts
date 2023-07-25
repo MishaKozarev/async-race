@@ -27,3 +27,9 @@ export type records = {
     animation: Animation;
     wins?: number;
 };
+
+export type winItem = {
+    id: number;
+    wins: number;
+    time: number;
+};

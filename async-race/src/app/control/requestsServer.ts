@@ -1,6 +1,6 @@
 import baseUrl from '../data/baseUrlData';
 import paths from '../data/pathsData';
-import { cars, engine } from '../types/types';
+import { cars, engine, winItem } from '../types/types';
 import changeData from '../data/changeData';
 
 class RequestsServer {
@@ -56,6 +56,12 @@ class RequestsServer {
             method: 'PATCH',
         });
         const data: { success: boolean } = await response.json();
+        return data;
+    }
+
+    async getWinner(id: string): Promise<winItem> {
+        const response: Response = await fetch(`${baseUrl}winners/${id}`);
+        const data: winItem = await response.json();
         return data;
     }
 }

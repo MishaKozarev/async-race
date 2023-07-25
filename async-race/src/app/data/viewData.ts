@@ -49,6 +49,7 @@ const view = {
         th: 'th',
         flag: 'flag',
         container: 'container',
+        winner: 'winner',
     },
     text: {
         btnGarage: 'TO GARAGE',

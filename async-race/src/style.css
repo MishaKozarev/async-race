@@ -1,7 +1,12 @@
 body {
     display: flex;
     flex-direction: column;
-    background: rgb(39, 38, 38);
+    /* background: rgb(39, 38, 38); */
+    background: url('./assets/Ozp.gif');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
     width: 100vw;
     height: 100vh;
     padding: 0;
@@ -159,4 +164,17 @@ td {
 
 .go {
     transform: translate(350px,0);
+}
+
+.winner {
+    position: absolute;
+    top:25%;
+    left:70%;
+    transform:translate(-50%, -50%);
+    width:50vw;
+    height: 30vh;
+    display: block;
+    color: rgb(81, 255, 0);
+    font-size: 50px;
+    z-index: 3;
 }

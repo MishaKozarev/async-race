@@ -2,14 +2,19 @@ import view from '../data/viewData';
 import carSvg from '../data/carSvgData';
 import changeData from '../data/changeData';
 import { cars, engine, records } from '../types/types';
-// import AnimationRecord from '../data/animation';
+import Animations from '../data/animation';
+import RequestsServer from '../control/requestsServer';
 
 class View {
     body: HTMLBodyElement | null;
     sectionGarage: HTMLElement;
+    animations: Animations;
+    requestsServer: RequestsServer;
     constructor() {
         this.body = document.querySelector('body');
         this.sectionGarage = this.createElem(view.html.section, view.css.sectionGarage);
+        this.animations = new Animations();
+        this.requestsServer = new RequestsServer();
     }
 
     createElem(tagName: string, cssClass: string, text?: string) {
@@ -75,10 +80,11 @@ class View {
         const btnPrev: HTMLElement = this.createElem(view.html.btn, view.css.btnPrev, view.text.btnPrev);
         const btnNext: HTMLElement = this.createElem(view.html.btn, view.css.btnNext, view.text.btnNext);
         const containerTracks: HTMLElement = this.createElem(view.html.div, view.css.container);
+        const diwWinner: HTMLElement = this.createElem(view.html.div, view.css.winner);
         this.body?.append(header, main, footer);
         header.append(btnGarage, btnWinner);
         main.append(this.sectionGarage, sectionWinner);
-        this.sectionGarage.append(divControl, countGarage, numGarage, containerTracks);
+        this.sectionGarage.append(diwWinner, divControl, countGarage, numGarage, containerTracks);
         divControl.append(
             inputTextCreate,
             inputColorCreate,
@@ -130,6 +136,7 @@ class View {
         const btnNext: HTMLButtonElement = document.querySelector('.btn-next') as HTMLButtonElement;
         if (containerTracks) containerTracks.innerHTML = '';
         changeData.pageCarsNumber = pageNumber;
+        Animations.recordsAnimation = [];
         (result[0] as cars[]).forEach((item) => {
             this.createTrack(item.id, item.color, item.name);
         });
@@ -157,19 +164,19 @@ class View {
     }
 
     async startAnimation(id: string, carEnginData: Promise<engine>): Promise<void> {
+        const winner = document.querySelector('.winner') as HTMLElement;
         const carFeature: engine = await carEnginData;
         const carBlock: HTMLElement = document.getElementById(id) as HTMLElement;
-        let recordsAnimation: records[] = [];
         if (carFeature.velocity === 0) {
             const newRecordsAnimation: records[] = [];
-            recordsAnimation.forEach((item) => {
+            Animations.recordsAnimation.forEach((item) => {
                 if (item.id !== +id) {
                     newRecordsAnimation.push(item);
                 } else {
                     item.animation.cancel();
                 }
             });
-            recordsAnimation = newRecordsAnimation;
+            Animations.recordsAnimation = newRecordsAnimation;
             (carBlock.children[5].children[0] as HTMLElement).style.left = '0';
             return;
         }
@@ -179,8 +186,20 @@ class View {
             [{ left: '0px' }, { left: `${distance}px` }],
             { duration: time, fill: 'forwards' }
         );
-        recordsAnimation.push({ id: +id, time: +(time / 1000).toFixed(2), animation: anim });
-        console.log(recordsAnimation);
+        Animations.recordsAnimation.push({ id: +id, time: +(time / 1000).toFixed(2), animation: anim });
+        const winnerCar = Animations.recordsAnimation.sort((a, b) => (a.time < b.time ? -1 : 1));
+        const tracks: NodeListOf<Element> = document.querySelectorAll('.track') as NodeListOf<Element>;
+        const timeWinner: number = winnerCar[0].time;
+        tracks.forEach((track: Element) => {
+            if (+track.id === Number(winnerCar[0].id)) {
+                setTimeout(() => {
+                    const nameWin: string = track?.children[4].textContent as string;
+                    winner.style.display = 'block';
+                    winner.textContent = `Winner ${nameWin} time: ${timeWinner}`;
+                    setTimeout(() => (winner.style.display = 'none'), 4000);
+                }, 5000);
+            }
+        });
     }
 
     async stopAnimation(id: string): Promise<void> {

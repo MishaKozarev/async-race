@@ -4,6 +4,7 @@ import RequestsServer from './control/requestsServer';
 import changeData from './data/changeData';
 import { cars } from './types/types';
 import Generate from './data/generate';
+import Animations from './data/animation';
 
 class App {
     view: View;
@@ -114,7 +115,6 @@ class App {
         const sectionGarage = document.querySelector('.section-garage') as HTMLElement;
         sectionGarage.addEventListener('click', async (btnRace) => {
             if ((btnRace.target as HTMLElement).classList.contains('btn-race')) {
-                console.log(btnRace.target);
                 ((await this.requestServer.getCars())[0] as cars[]).forEach((item) => {
                     this.view
                         .startAnimation(`${item.id}`, this.requestServer.startStopEngine(`${item.id}`, 'started'))
@@ -142,9 +142,10 @@ class App {
     addEventsOnClickButtonReset() {
         const sectionGarage = document.querySelector('.section-garage') as HTMLElement;
         sectionGarage.addEventListener('click', (btnReset) => {
-            console.log(btnReset.target);
             if ((btnReset.target as HTMLElement).classList.contains('btn-reset')) {
-                location.reload();
+                Animations.recordsAnimation.forEach((item) =>
+                    this.view.startAnimation(`${item.id}`, this.requestServer.startStopEngine(`${item.id}`, 'stopped'))
+                );
             }
         });
     }
