@@ -116,14 +116,23 @@ class View {
         const carImage: HTMLOrSVGImageElement = this.createElem(view.html.div, view.css.carImage) as HTMLImageElement;
         carImage.innerHTML = carSvg;
         const spanCarName: HTMLElement = this.createElem(view.html.span, view.css.carName, `${carNameModel}`);
-        const btnStart: HTMLElement = this.createElem(view.html.btn, view.css.btnStart, view.text.btnStart);
-        const btnStop: HTMLElement = this.createElem(view.html.btn, view.css.btnStop, view.text.btnStop);
+        const btnStart: HTMLButtonElement = this.createElem(
+            view.html.btn,
+            view.css.btnStart,
+            view.text.btnStart
+        ) as HTMLButtonElement;
+        const btnStop: HTMLButtonElement = this.createElem(
+            view.html.btn,
+            view.css.btnStop,
+            view.text.btnStop
+        ) as HTMLButtonElement;
         const btnSelect: HTMLElement = this.createElem(view.html.btn, view.css.btnSelect, view.text.btnSelect);
         const btnRemove: HTMLElement = this.createElem(view.html.btn, view.css.btnRemove, view.text.btnRemove);
         const flagFinish: HTMLElement = this.createElem(view.html.div, view.css.flag);
         divTrack.append(btnStart, btnStop, btnSelect, btnRemove, spanCarName, carImage, flagFinish);
         (divTrack.children[5].children[0].children[0] as HTMLElement).style.fill = carColor;
         containerTracks.append(divTrack);
+        btnStop.disabled = true;
     }
 
     async addTrack(cars: Promise<[cars[] | cars, string, string]>): Promise<void> {
@@ -186,6 +195,11 @@ class View {
             [{ left: '0px' }, { left: `${distance}px` }],
             { duration: time, fill: 'forwards' }
         );
+        // const btnStart = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
+        // btnStart.forEach((element) => (element.disabled = true));
+        (carBlock.children[0] as HTMLButtonElement).disabled = true;
+        (carBlock.children[1] as HTMLButtonElement).disabled = false;
+        console.log();
         Animations.recordsAnimation.push({ id: +id, time: +(time / 1000).toFixed(2), animation: anim });
         const winnerCar = Animations.recordsAnimation.sort((a, b) => (a.time < b.time ? -1 : 1));
         const tracks: NodeListOf<Element> = document.querySelectorAll('.track') as NodeListOf<Element>;
@@ -206,8 +220,7 @@ class View {
         const carBlock: HTMLElement = document.getElementById(id) as HTMLElement;
         const carPosition: number = carBlock.children[5].children[0].getBoundingClientRect().left;
         (carBlock.children[5].children[0] as HTMLElement).style.left = `${carPosition}px`;
-        const recordsAnimation: records[] = [];
-        recordsAnimation.forEach((item) => {
+        Animations.recordsAnimation.forEach((item) => {
             if (item.id === +id) {
                 item.time = Infinity;
                 item.animation.cancel();

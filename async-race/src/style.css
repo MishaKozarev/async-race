@@ -92,9 +92,9 @@ button {
 .car-image svg{
     width: 100px;
     position: absolute;
-    left: 0;
     bottom: 0;
     transition: all 2s ease-in-out;
+    left: 0;
 }
 
 .car-image.go {
@@ -123,14 +123,9 @@ button {
     width: 60px;
     height: 20px;
     border-radius: 1px;
-    background: rgb(39, 38, 38);
+    background: rgb(22, 22, 22);
     margin-right: 10px;
     color: beige;
-}
-
-.btn-start:hover,
-.btn-stop:hover {
-    color: aqua;
 }
 
 .track__race {

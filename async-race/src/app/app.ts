@@ -105,8 +105,8 @@ class App {
                     .then(() => this.requestServer.carRun(parentId).catch(() => this.view.stopAnimation(parentId)));
             }
             if ((event.target as HTMLElement).classList.contains('btn-stop')) {
-                // this.view.startAnimation(parentId, this.requestServer.startStopEngine(parentId, 'stopped'));
-                location.reload();
+                this.view.startAnimation(parentId, this.requestServer.startStopEngine(parentId, 'stopped'));
+                // location.reload();
             }
         });
     }
@@ -122,6 +122,8 @@ class App {
                             this.requestServer.carRun(`${item.id}`).catch(() => this.view.stopAnimation(`${item.id}`))
                         );
                 });
+                const btnStart = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
+                btnStart.forEach((element) => (element.disabled = true));
             }
         });
     }
@@ -146,6 +148,8 @@ class App {
                 Animations.recordsAnimation.forEach((item) =>
                     this.view.startAnimation(`${item.id}`, this.requestServer.startStopEngine(`${item.id}`, 'stopped'))
                 );
+                const btnStart = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
+                btnStart.forEach((element) => (element.disabled = false));
             }
         });
     }
