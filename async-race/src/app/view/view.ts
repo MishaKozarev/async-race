@@ -1,7 +1,7 @@
 import view from '../data/viewData';
 import carSvg from '../data/carSvgData';
 import changeData from '../data/changeData';
-import { cars, engine, records } from '../types/types';
+import { cars, engine, records, winItem } from '../types/types';
 import Animations from '../data/animation';
 import RequestsServer from '../control/requestsServer';
 
@@ -20,7 +20,7 @@ class View {
     createElem(tagName: string, cssClass: string, text?: string) {
         const element = document.createElement(`${tagName}`);
         element.className = cssClass;
-        if (text) element.textContent = text;
+        if (text) element.innerHTML = text;
         return element;
     }
 
@@ -195,8 +195,6 @@ class View {
             [{ left: '0px' }, { left: `${distance}px` }],
             { duration: time, fill: 'forwards' }
         );
-        // const btnStart = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
-        // btnStart.forEach((element) => (element.disabled = true));
         (carBlock.children[0] as HTMLButtonElement).disabled = true;
         (carBlock.children[1] as HTMLButtonElement).disabled = false;
         console.log();
@@ -225,6 +223,36 @@ class View {
                 item.time = Infinity;
                 item.animation.cancel();
             }
+        });
+    }
+
+    drawWinnersFragment(number: number, name: string, wins: string, time: string): void {
+        const winnersTable: HTMLElement = document.querySelector('.table') as HTMLElement;
+        const tableRow: HTMLElement = this.createElem('tr', 'tr-regular') as HTMLElement;
+        const tdNum: HTMLElement = this.createElem('td', 'td-number', `${number}`) as HTMLElement;
+        const tdCar: HTMLElement = this.createElem('td', 'td-car') as HTMLElement;
+        tdCar.innerHTML = carSvg;
+        const tdName: HTMLElement = this.createElem('td', 'td-name', `${name}`) as HTMLElement;
+        const tdWin: HTMLElement = this.createElem('td', 'td-wins', `${wins}`) as HTMLElement;
+        const tdTime: HTMLElement = this.createElem('td', 'td-time', `${time}`) as HTMLElement;
+        winnersTable.append(tableRow);
+        tableRow.append(tdNum, tdCar, tdName, tdWin, tdTime);
+    }
+
+    async addWinnersFragments(winners: Promise<winItem[]>): Promise<void> {
+        const results: winItem[] = await winners;
+        Animations.winnersId = [];
+        // const currentId = await this.requestsServer.getCars(`${}`);
+        results.forEach((result) => {
+            const currentId = result.id;
+            const tracks: NodeListOf<Element> = document.querySelectorAll('.track') as NodeListOf<Element>;
+            tracks.forEach((track: Element) => {
+                if (+track.id === currentId) {
+                    const nameWin: string = track?.children[4].textContent as string;
+                    this.drawWinnersFragment(1, `${nameWin}`, `1`, `${result.time}`);
+                    Animations.winnersId.push(result.id);
+                }
+            });
         });
     }
 }

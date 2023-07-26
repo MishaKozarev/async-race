@@ -20,6 +20,7 @@ class App {
     start(): void {
         this.view.createPage();
         this.view.addTrack(this.requestServer.getCars());
+        this.view.addWinnersFragments(this.requestServer.getWinner());
         this.selectPage.setSelect();
         this.getCurrentId();
         this.addEventsOnClickButtonCreate();

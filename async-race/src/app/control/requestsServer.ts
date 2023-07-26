@@ -59,9 +59,9 @@ class RequestsServer {
         return data;
     }
 
-    async getWinner(id: string): Promise<winItem> {
-        const response: Response = await fetch(`${baseUrl}winners/${id}`);
-        const data: winItem = await response.json();
+    async getWinner(): Promise<winItem[]> {
+        const response: Response = await fetch(`${baseUrl}winners/`);
+        const data: winItem[] = await response.json();
         return data;
     }
 }
