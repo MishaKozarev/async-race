@@ -108,6 +108,10 @@ class App {
             }
             if ((event.target as HTMLElement).classList.contains('btn-stop')) {
                 this.view.startAnimation(parentId, this.requestServer.startStopEngine(parentId, 'stopped'));
+                const btnStop = document.querySelectorAll('.btn-stop') as NodeListOf<HTMLButtonElement>;
+                btnStop.forEach((element) => (element.disabled = true));
+                const btnStart = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
+                btnStart.forEach((element) => (element.disabled = false));
                 // location.reload();
             }
         });
@@ -177,9 +181,10 @@ class App {
             winner.style.display = 'block';
             const nameWin = localStorage.getItem('nameWin');
             const timeWinner = localStorage.getItem('timeWinner');
+            console.log(timeWinner);
             winner.textContent = `Winner ${nameWin} time: ${timeWinner}`;
             setTimeout(() => (winner.style.display = 'none'), 4000);
-        }, 5000);
+        }, Number(localStorage.getItem('timeWinner')) * 1000);
     }
 }
 export default App;

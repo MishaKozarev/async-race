@@ -243,7 +243,6 @@ class View {
         Animations.winnersId = [];
         results.forEach((result) => {
             const allCar = carsAllGarage.filter((el) => el.id === result.id)[0];
-            console.log(allCar);
             const allCarId = allCar.id;
             const allCarName = allCar.name;
             if (result.id === allCarId) {
