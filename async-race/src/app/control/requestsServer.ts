@@ -14,6 +14,12 @@ class RequestsServer {
         return [data, carsCount, currentPage];
     }
 
+    async getCarsAll(): Promise<cars[]> {
+        const response: Response = await fetch(`${baseUrl}${paths.garage}`);
+        const data: cars[] = await response.json();
+        return data;
+    }
+
     async createCar(name: string, color: string): Promise<cars[]> {
         const response = await fetch(`${baseUrl}${paths.garage}`, {
             method: 'POST',
@@ -59,10 +65,25 @@ class RequestsServer {
         return data;
     }
 
-    async getWinner(): Promise<winItem[]> {
+    async getWinners(): Promise<winItem[]> {
         const response: Response = await fetch(`${baseUrl}winners/`);
         const data: winItem[] = await response.json();
         return data;
+    }
+    async getWinner(id: string): Promise<winItem> {
+        const response: Response = await fetch(`${baseUrl}winners/${id}`);
+        const data: winItem = await response.json();
+        return data;
+    }
+
+    async createWinner(id: string, wins: string, time: string): Promise<void> {
+        await fetch(`${baseUrl}winners`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: +id, wins: +wins, time: +time }),
+        });
     }
 }
 

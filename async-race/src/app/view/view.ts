@@ -3,18 +3,18 @@ import carSvg from '../data/carSvgData';
 import changeData from '../data/changeData';
 import { cars, engine, records, winItem } from '../types/types';
 import Animations from '../data/animation';
-import RequestsServer from '../control/requestsServer';
+import RequestServer from '../control/requestsServer';
 
 class View {
     body: HTMLBodyElement | null;
     sectionGarage: HTMLElement;
     animations: Animations;
-    requestsServer: RequestsServer;
+    requestServer: RequestServer;
     constructor() {
         this.body = document.querySelector('body');
         this.sectionGarage = this.createElem(view.html.section, view.css.sectionGarage);
         this.animations = new Animations();
-        this.requestsServer = new RequestsServer();
+        this.requestServer = new RequestServer();
     }
 
     createElem(tagName: string, cssClass: string, text?: string) {
@@ -173,7 +173,7 @@ class View {
     }
 
     async startAnimation(id: string, carEnginData: Promise<engine>): Promise<void> {
-        const winner = document.querySelector('.winner') as HTMLElement;
+        // const winner = document.querySelector('.winner') as HTMLElement;
         const carFeature: engine = await carEnginData;
         const carBlock: HTMLElement = document.getElementById(id) as HTMLElement;
         if (carFeature.velocity === 0) {
@@ -197,21 +197,19 @@ class View {
         );
         (carBlock.children[0] as HTMLButtonElement).disabled = true;
         (carBlock.children[1] as HTMLButtonElement).disabled = false;
-        console.log();
         Animations.recordsAnimation.push({ id: +id, time: +(time / 1000).toFixed(2), animation: anim });
-        const winnerCar = Animations.recordsAnimation.sort((a, b) => (a.time < b.time ? -1 : 1));
-        const tracks: NodeListOf<Element> = document.querySelectorAll('.track') as NodeListOf<Element>;
-        const timeWinner: number = winnerCar[0].time;
-        tracks.forEach((track: Element) => {
-            if (+track.id === Number(winnerCar[0].id)) {
-                setTimeout(() => {
-                    const nameWin: string = track?.children[4].textContent as string;
-                    winner.style.display = 'block';
-                    winner.textContent = `Winner ${nameWin} time: ${timeWinner}`;
-                    setTimeout(() => (winner.style.display = 'none'), 4000);
-                }, 5000);
-            }
-        });
+        const winnerCarAnimation = Animations.recordsAnimation.sort((a, b) => (a.time < b.time ? -1 : 1));
+        const timeWinner: number = winnerCarAnimation[0].time;
+        const winnerId = winnerCarAnimation[0].id;
+        const carsAllGarage: cars[] = await this.requestServer.getCarsAll();
+        const allCar = carsAllGarage.filter((el) => el.id === winnerId)[0];
+        const allCarId = allCar.id;
+        const allCarName = allCar.name;
+        if (winnerId === allCarId) {
+            localStorage.setItem('winnerId', `${winnerId}`);
+            localStorage.setItem('nameWin', `${allCarName}`);
+            localStorage.setItem('timeWinner', `${timeWinner}`);
+        }
     }
 
     async stopAnimation(id: string): Promise<void> {
@@ -241,18 +239,17 @@ class View {
 
     async addWinnersFragments(winners: Promise<winItem[]>): Promise<void> {
         const results: winItem[] = await winners;
+        const carsAllGarage: cars[] = await this.requestServer.getCarsAll();
         Animations.winnersId = [];
-        // const currentId = await this.requestsServer.getCars(`${}`);
         results.forEach((result) => {
-            const currentId = result.id;
-            const tracks: NodeListOf<Element> = document.querySelectorAll('.track') as NodeListOf<Element>;
-            tracks.forEach((track: Element) => {
-                if (+track.id === currentId) {
-                    const nameWin: string = track?.children[4].textContent as string;
-                    this.drawWinnersFragment(1, `${nameWin}`, `1`, `${result.time}`);
-                    Animations.winnersId.push(result.id);
-                }
-            });
+            const allCar = carsAllGarage.filter((el) => el.id === result.id)[0];
+            console.log(allCar);
+            const allCarId = allCar.id;
+            const allCarName = allCar.name;
+            if (result.id === allCarId) {
+                this.drawWinnersFragment(1, `${allCarName}`, `1`, `${result.time}`);
+                Animations.winnersId.push(result.id);
+            }
         });
     }
 }

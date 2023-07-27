@@ -20,7 +20,7 @@ class App {
     start(): void {
         this.view.createPage();
         this.view.addTrack(this.requestServer.getCars());
-        this.view.addWinnersFragments(this.requestServer.getWinner());
+        this.view.addWinnersFragments(this.requestServer.getWinners());
         this.selectPage.setSelect();
         this.getCurrentId();
         this.addEventsOnClickButtonCreate();
@@ -31,6 +31,7 @@ class App {
         this.addEventsOnClickButtonRace();
         this.addEventsOnClickButtonGenerate();
         this.addEventsOnClickButtonReset();
+        this.requestServer.getCarsAll();
     }
 
     addEventsOnClickButtonCreate() {
@@ -125,6 +126,8 @@ class App {
                 });
                 const btnStart = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
                 btnStart.forEach((element) => (element.disabled = true));
+                this.getWinnerCar();
+                this.showWinner();
             }
         });
     }
@@ -153,6 +156,30 @@ class App {
                 btnStart.forEach((element) => (element.disabled = false));
             }
         });
+    }
+
+    getWinnerCar() {
+        const table = document.querySelector('.table') as HTMLElement;
+        setTimeout(() => {
+            const winnerId = localStorage.getItem('winnerId');
+            const timeWinner = localStorage.getItem('timeWinner');
+            this.requestServer.createWinner(`${winnerId}`, '1', `${timeWinner}`);
+            table.innerHTML = '';
+        }, 5000);
+        setTimeout(() => {
+            this.view.addWinnersFragments(this.requestServer.getWinners());
+        }, 6000);
+    }
+
+    showWinner() {
+        const winner = document.querySelector('.winner') as HTMLElement;
+        setTimeout(() => {
+            winner.style.display = 'block';
+            const nameWin = localStorage.getItem('nameWin');
+            const timeWinner = localStorage.getItem('timeWinner');
+            winner.textContent = `Winner ${nameWin} time: ${timeWinner}`;
+            setTimeout(() => (winner.style.display = 'none'), 4000);
+        }, 5000);
     }
 }
 export default App;
