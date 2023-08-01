@@ -8,9 +8,6 @@ class Animations {
         Animations.recordsAnimation = [];
         Animations.winnersId = [];
     }
-    getAnimation() {
-        console.log(Animations.recordsAnimation);
-    }
 }
 
 export default Animations;

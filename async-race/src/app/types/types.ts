@@ -2,8 +2,6 @@ export type paramType = {
     [key: string]: string;
 };
 
-export type Callback<T> = (date: T) => void;
-
 export type cars = {
     name: string;
     color: string;

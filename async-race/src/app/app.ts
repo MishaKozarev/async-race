@@ -20,13 +20,13 @@ class App {
     start(): void {
         this.view.createPage();
         this.view.addTrack(this.requestServer.getCars());
-        this.view.addWinnersFragments(this.requestServer.getWinners());
+        this.view.addWinnerTable(this.requestServer.getWinners());
         this.selectPage.setSelect();
-        this.getCurrentId();
+        this.setCurrentId();
         this.addEventsOnClickButtonCreate();
         this.removeEventsOnClickButtonCreate();
         this.updateEventsOnClickButtonCreate();
-        this.updateEventsOnClickButtonТNext();
+        this.updateEventsOnClickButtonNext();
         this.addEventsOnClickButtonStart();
         this.addEventsOnClickButtonRace();
         this.addEventsOnClickButtonGenerate();
@@ -34,22 +34,23 @@ class App {
         this.requestServer.getCarsAll();
     }
 
-    addEventsOnClickButtonCreate() {
-        const create: HTMLElement | null = document.querySelector('.btn-create');
-        if (create)
-            create.addEventListener('click', () => {
-                const inputColorCreate: HTMLInputElement | null = document.querySelector('.create__input-color');
-                const inputTextCreate: HTMLInputElement | null = document.querySelector('.create__input-text');
-                const carName: string = (inputTextCreate as HTMLInputElement).value;
-                const carColor: string = (inputColorCreate as HTMLInputElement).value;
-                this.requestServer
-                    .createCar(carName, carColor)
-                    .then(() => this.view.addTrack(this.requestServer.getCars()));
-            });
+    addEventsOnClickButtonCreate(): void {
+        const create: HTMLButtonElement = document.querySelector('.btn-create') as HTMLButtonElement;
+        create.addEventListener('click', () => {
+            const inputColorCreate: HTMLInputElement = document.querySelector(
+                '.create__input-color'
+            ) as HTMLInputElement;
+            const inputTextCreate: HTMLInputElement = document.querySelector('.create__input-text') as HTMLInputElement;
+            const carName: string = (inputTextCreate as HTMLInputElement).value;
+            const carColor: string = (inputColorCreate as HTMLInputElement).value;
+            this.requestServer
+                .createCar(carName, carColor)
+                .then(() => this.view.addTrack(this.requestServer.getCars()));
+        });
     }
 
-    removeEventsOnClickButtonCreate() {
-        const sectionGarage = document.querySelector('.section-garage') as HTMLElement;
+    removeEventsOnClickButtonCreate(): void {
+        const sectionGarage: HTMLElement = document.querySelector('.section-garage') as HTMLElement;
         sectionGarage.addEventListener('click', (btnRemove) => {
             if ((btnRemove.target as HTMLElement).classList.contains('btn-remove')) {
                 const currentId: string = ((btnRemove.target as HTMLElement).parentNode as HTMLElement).id;
@@ -58,15 +59,15 @@ class App {
         });
     }
 
-    updateEventsOnClickButtonCreate() {
-        const sectionGarage = document.querySelector('.section-garage') as HTMLElement;
+    updateEventsOnClickButtonCreate(): void {
+        const sectionGarage: HTMLElement = document.querySelector('.section-garage') as HTMLElement;
         sectionGarage.addEventListener('click', (btnUpdate) => {
             if ((btnUpdate.target as HTMLElement).classList.contains('btn-update')) {
                 const inputColorUpdate: HTMLInputElement | null = document.querySelector('.update__input-color');
                 const inputTextUpdate: HTMLInputElement | null = document.querySelector('.update__input-text');
                 const carName: string = (inputTextUpdate as HTMLInputElement).value;
                 const carColor: string = (inputColorUpdate as HTMLInputElement).value;
-                const currentId = localStorage.getItem('currentIdStorage');
+                const currentId: string | null = localStorage.getItem('currentIdStorage');
                 this.requestServer
                     .updateCar(`${currentId}`, carName, carColor)
                     .then(() => this.view.addTrack(this.requestServer.getCars()));
@@ -74,8 +75,8 @@ class App {
         });
     }
 
-    getCurrentId() {
-        const sectionGarage = document.querySelector('.section-garage') as HTMLElement;
+    setCurrentId(): void {
+        const sectionGarage: HTMLElement = document.querySelector('.section-garage') as HTMLElement;
         sectionGarage.addEventListener('click', (btnSelect) => {
             if ((btnSelect.target as HTMLElement).classList.contains('btn-select')) {
                 (btnSelect.target as HTMLButtonElement).disabled = true;
@@ -87,7 +88,7 @@ class App {
         });
     }
 
-    updateEventsOnClickButtonТNext(): void {
+    updateEventsOnClickButtonNext(): void {
         document.querySelector('.footer')?.addEventListener('click', (event) => {
             if ((event.target as HTMLElement).classList.contains('btn-next')) {
                 this.view.addTrack(this.requestServer.getCars('', `${+changeData.pageCarsNumber + 1}`));
@@ -108,17 +109,19 @@ class App {
             }
             if ((event.target as HTMLElement).classList.contains('btn-stop')) {
                 this.view.startAnimation(parentId, this.requestServer.startStopEngine(parentId, 'stopped'));
-                const btnStop = document.querySelectorAll('.btn-stop') as NodeListOf<HTMLButtonElement>;
+                const btnStop: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
+                    '.btn-stop'
+                ) as NodeListOf<HTMLButtonElement>;
                 btnStop.forEach((element) => (element.disabled = true));
-                const btnStart = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
+                const btnStart: NodeListOf<HTMLButtonElement> = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
                 btnStart.forEach((element) => (element.disabled = false));
                 // location.reload();
             }
         });
     }
 
-    addEventsOnClickButtonRace() {
-        const sectionGarage = document.querySelector('.section-garage') as HTMLElement;
+    addEventsOnClickButtonRace(): void {
+        const sectionGarage: HTMLElement = document.querySelector('.section-garage') as HTMLElement;
         sectionGarage.addEventListener('click', async (btnRace) => {
             if ((btnRace.target as HTMLElement).classList.contains('btn-race')) {
                 ((await this.requestServer.getCars())[0] as cars[]).forEach((item) => {
@@ -128,7 +131,7 @@ class App {
                             this.requestServer.carRun(`${item.id}`).catch(() => this.view.stopAnimation(`${item.id}`))
                         );
                 });
-                const btnStart = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
+                const btnStart: NodeListOf<HTMLButtonElement> = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
                 btnStart.forEach((element) => (element.disabled = true));
                 this.getWinnerCar();
                 this.showWinner();
@@ -136,11 +139,11 @@ class App {
         });
     }
 
-    addEventsOnClickButtonGenerate() {
-        const sectionGarage = document.querySelector('.section-garage') as HTMLElement;
+    addEventsOnClickButtonGenerate(): void {
+        const sectionGarage: HTMLElement = document.querySelector('.section-garage') as HTMLElement;
         sectionGarage.addEventListener('click', async (btnGenerate) => {
             if ((btnGenerate.target as HTMLElement).classList.contains('btn-generate')) {
-                for (let index = 0; index < 100; index++) {
+                for (let i = 0; i < 100; i++) {
                     this.requestServer
                         .createCar(this.generate.getRandomName(), this.generate.getRandomColor())
                         .then(() => this.view.addTrack(this.requestServer.getCars()));
@@ -149,38 +152,38 @@ class App {
         });
     }
 
-    addEventsOnClickButtonReset() {
-        const sectionGarage = document.querySelector('.section-garage') as HTMLElement;
+    addEventsOnClickButtonReset(): void {
+        const sectionGarage: HTMLElement = document.querySelector('.section-garage') as HTMLElement;
         sectionGarage.addEventListener('click', (btnReset) => {
             if ((btnReset.target as HTMLElement).classList.contains('btn-reset')) {
                 Animations.recordsAnimation.forEach((item) =>
                     this.view.startAnimation(`${item.id}`, this.requestServer.startStopEngine(`${item.id}`, 'stopped'))
                 );
-                const btnStart = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
+                const btnStart: NodeListOf<HTMLButtonElement> = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
                 btnStart.forEach((element) => (element.disabled = false));
             }
         });
     }
 
-    getWinnerCar() {
-        const table = document.querySelector('.table') as HTMLElement;
+    getWinnerCar(): void {
+        const table: HTMLElement = document.querySelector('.table') as HTMLElement;
         setTimeout(() => {
-            const winnerId = localStorage.getItem('winnerId');
-            const timeWinner = localStorage.getItem('timeWinner');
+            const winnerId: string | null = localStorage.getItem('winnerId');
+            const timeWinner: string | null = localStorage.getItem('timeWinner');
             this.requestServer.createWinner(`${winnerId}`, '1', `${timeWinner}`);
             table.innerHTML = '';
         }, 5000);
         setTimeout(() => {
-            this.view.addWinnersFragments(this.requestServer.getWinners());
+            this.view.addWinnerTable(this.requestServer.getWinners());
         }, 6000);
     }
 
-    showWinner() {
-        const winner = document.querySelector('.winner') as HTMLElement;
+    showWinner(): void {
+        const winner: HTMLElement = document.querySelector('.winner') as HTMLElement;
         setTimeout(() => {
             winner.style.display = 'block';
-            const nameWin = localStorage.getItem('nameWin');
-            const timeWinner = localStorage.getItem('timeWinner');
+            const nameWin: string | null = localStorage.getItem('nameWin');
+            const timeWinner: string | null = localStorage.getItem('timeWinner');
             console.log(timeWinner);
             winner.textContent = `Winner ${nameWin} time: ${timeWinner}`;
             setTimeout(() => (winner.style.display = 'none'), 4000);

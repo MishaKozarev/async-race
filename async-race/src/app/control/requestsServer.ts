@@ -50,7 +50,7 @@ class RequestsServer {
     }
 
     async startStopEngine(id: string, status: 'started' | 'stopped'): Promise<engine> {
-        const response: Response = await fetch(`${baseUrl}engine?id=${id}&status=${status}`, {
+        const response: Response = await fetch(`${baseUrl}${paths.engine}?id=${id}&status=${status}`, {
             method: 'PATCH',
         });
         const data: engine = await response.json();
@@ -58,7 +58,7 @@ class RequestsServer {
     }
 
     async carRun(id: string): Promise<{ success: boolean }> {
-        const response: Response = await fetch(`${baseUrl}engine?id=${id}&status=drive`, {
+        const response: Response = await fetch(`${baseUrl}${paths.engine}?id=${id}&status=drive`, {
             method: 'PATCH',
         });
         const data: { success: boolean } = await response.json();
@@ -66,18 +66,18 @@ class RequestsServer {
     }
 
     async getWinners(): Promise<winItem[]> {
-        const response: Response = await fetch(`${baseUrl}winners/`);
+        const response: Response = await fetch(`${baseUrl}${paths.winners}/`);
         const data: winItem[] = await response.json();
         return data;
     }
     async getWinner(id: string): Promise<winItem> {
-        const response: Response = await fetch(`${baseUrl}winners/${id}`);
+        const response: Response = await fetch(`${baseUrl}${paths.winners}/${id}`);
         const data: winItem = await response.json();
         return data;
     }
 
     async createWinner(id: string, wins: string, time: string): Promise<void> {
-        await fetch(`${baseUrl}winners`, {
+        await fetch(`${baseUrl}${paths.winners}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

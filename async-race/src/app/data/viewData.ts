@@ -12,6 +12,8 @@ const view = {
         span: 'span',
         table: 'table',
         th: 'th',
+        td: 'td',
+        tr: 'tr',
     },
     css: {
         header: 'header',
@@ -47,6 +49,8 @@ const view = {
         divTrack: 'track',
         table: 'table',
         th: 'th',
+        tr: 'tr',
+        td: 'td',
         flag: 'flag',
         container: 'container',
         winner: 'winner',

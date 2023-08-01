@@ -17,21 +17,21 @@ class View {
         this.requestServer = new RequestServer();
     }
 
-    createElem(tagName: string, cssClass: string, text?: string) {
+    createElem(tagName: string, cssClass: string, text?: string): HTMLElement {
         const element = document.createElement(`${tagName}`);
         element.className = cssClass;
         if (text) element.innerHTML = text;
         return element;
     }
 
-    createElemTrack(tagName: string, cssClass: string, id: string) {
+    createElemTrack(tagName: string, cssClass: string, id: string): HTMLElement {
         const element = document.createElement(`${tagName}`);
         element.className = cssClass;
         element.id = id;
         return element;
     }
 
-    createInput(tagName: string, cssClass: string, attribute?: string, nameAttribute?: string) {
+    createInput(tagName: string, cssClass: string, attribute?: string, nameAttribute?: string): HTMLElement {
         const element = document.createElement(`${tagName}`);
         element.className = cssClass;
         if (attribute) element.setAttribute(`${attribute}`, `${nameAttribute}`);
@@ -149,8 +149,8 @@ class View {
         (result[0] as cars[]).forEach((item) => {
             this.createTrack(item.id, item.color, item.name);
         });
-        const titleGarage = document.querySelector('.title-garage') as HTMLElement;
-        const subtitleGarage = document.querySelector('.subtitle-garage') as HTMLElement;
+        const titleGarage: HTMLElement = document.querySelector('.title-garage') as HTMLElement;
+        const subtitleGarage: HTMLElement = document.querySelector('.subtitle-garage') as HTMLElement;
         titleGarage.innerText = `Garage (${carsNumber})`;
         subtitleGarage.innerHTML = `Page #${pageNumber}`;
         btnNext.disabled = !(Number(carsNumber) > carsOnPage);
@@ -164,7 +164,7 @@ class View {
 
     async updateDataTrack(car: Promise<[cars[] | cars, string, string]>): Promise<void> {
         const result: [cars[] | cars, string, string] = await car;
-        const carData = result[0];
+        const carData: cars[] | cars = result[0];
         const inputTextUpdate = document.querySelector('.update__input-text') as HTMLInputElement;
         const inputColorUpdate = document.querySelector('.update__input-color') as HTMLInputElement;
         inputTextUpdate.value = (carData as cars).name;
@@ -173,7 +173,6 @@ class View {
     }
 
     async startAnimation(id: string, carEnginData: Promise<engine>): Promise<void> {
-        // const winner = document.querySelector('.winner') as HTMLElement;
         const carFeature: engine = await carEnginData;
         const carBlock: HTMLElement = document.getElementById(id) as HTMLElement;
         if (carFeature.velocity === 0) {
@@ -200,11 +199,11 @@ class View {
         Animations.recordsAnimation.push({ id: +id, time: +(time / 1000).toFixed(2), animation: anim });
         const winnerCarAnimation = Animations.recordsAnimation.sort((a, b) => (a.time < b.time ? -1 : 1));
         const timeWinner: number = winnerCarAnimation[0].time;
-        const winnerId = winnerCarAnimation[0].id;
+        const winnerId: number = winnerCarAnimation[0].id;
         const carsAllGarage: cars[] = await this.requestServer.getCarsAll();
-        const allCar = carsAllGarage.filter((el) => el.id === winnerId)[0];
-        const allCarId = allCar.id;
-        const allCarName = allCar.name;
+        const allCar: cars = carsAllGarage.filter((el) => el.id === winnerId)[0];
+        const allCarId: number = allCar.id;
+        const allCarName: string = allCar.name;
         if (winnerId === allCarId) {
             localStorage.setItem('winnerId', `${winnerId}`);
             localStorage.setItem('nameWin', `${allCarName}`);
@@ -224,29 +223,29 @@ class View {
         });
     }
 
-    drawWinnersFragment(number: number, name: string, wins: string, time: string): void {
+    createWinnerTable(number: number, name: string, wins: string, time: string): void {
         const winnersTable: HTMLElement = document.querySelector('.table') as HTMLElement;
-        const tableRow: HTMLElement = this.createElem('tr', 'tr-regular') as HTMLElement;
-        const tdNum: HTMLElement = this.createElem('td', 'td-number', `${number}`) as HTMLElement;
-        const tdCar: HTMLElement = this.createElem('td', 'td-car') as HTMLElement;
+        const tableRow: HTMLElement = this.createElem(view.html.tr, view.css.tr) as HTMLElement;
+        const tdNum: HTMLElement = this.createElem(view.html.td, view.css.td, `${number}`) as HTMLElement;
+        const tdCar: HTMLElement = this.createElem(view.html.td, view.css.td) as HTMLElement;
         tdCar.innerHTML = carSvg;
-        const tdName: HTMLElement = this.createElem('td', 'td-name', `${name}`) as HTMLElement;
-        const tdWin: HTMLElement = this.createElem('td', 'td-wins', `${wins}`) as HTMLElement;
-        const tdTime: HTMLElement = this.createElem('td', 'td-time', `${time}`) as HTMLElement;
+        const tdName: HTMLElement = this.createElem(view.html.td, view.css.td, `${name}`) as HTMLElement;
+        const tdWin: HTMLElement = this.createElem(view.html.td, view.css.td, `${wins}`) as HTMLElement;
+        const tdTime: HTMLElement = this.createElem(view.html.td, view.css.td, `${time}`) as HTMLElement;
         winnersTable.append(tableRow);
         tableRow.append(tdNum, tdCar, tdName, tdWin, tdTime);
     }
 
-    async addWinnersFragments(winners: Promise<winItem[]>): Promise<void> {
+    async addWinnerTable(winners: Promise<winItem[]>): Promise<void> {
         const results: winItem[] = await winners;
         const carsAllGarage: cars[] = await this.requestServer.getCarsAll();
         Animations.winnersId = [];
         results.forEach((result) => {
-            const allCar = carsAllGarage.filter((el) => el.id === result.id)[0];
-            const allCarId = allCar.id;
-            const allCarName = allCar.name;
+            const allCar: cars = carsAllGarage.filter((el) => el.id === result.id)[0];
+            const allCarId: number = allCar.id;
+            const allCarName: string = allCar.name;
             if (result.id === allCarId) {
-                this.drawWinnersFragment(1, `${allCarName}`, `1`, `${result.time}`);
+                this.createWinnerTable(1, `${allCarName}`, `1`, `${result.time}`);
                 Animations.winnersId.push(result.id);
             }
         });

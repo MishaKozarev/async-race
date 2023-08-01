@@ -3,10 +3,10 @@ class SelectPages {
         this.setSelect();
     }
     setSelect() {
-        const btnGarage: HTMLElement | null = document.querySelector('.btn-garage');
-        const btnWinner: HTMLElement | null = document.querySelector('.btn-winner');
-        const garage: HTMLElement | null = document.querySelector('.section-garage');
-        const winner: HTMLElement | null = document.querySelector('.section-winner');
+        const btnGarage: HTMLElement = document.querySelector('.btn-garage') as HTMLElement;
+        const btnWinner: HTMLElement = document.querySelector('.btn-winner') as HTMLElement;
+        const garage: HTMLElement = document.querySelector('.section-garage') as HTMLElement;
+        const winner: HTMLElement = document.querySelector('.section-winner') as HTMLElement;
         btnGarage?.addEventListener('click', () => {
             if (garage) garage.style.display = 'block';
             if (winner) winner.style.display = 'none';
