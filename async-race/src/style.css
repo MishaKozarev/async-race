@@ -1,7 +1,6 @@
 body {
     display: flex;
     flex-direction: column;
-    /* background: rgb(39, 38, 38); */
     background: url('./assets/Ozp.gif');
     background-position: center center;
     background-repeat: no-repeat;

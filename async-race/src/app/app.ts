@@ -113,9 +113,10 @@ class App {
                     '.btn-stop'
                 ) as NodeListOf<HTMLButtonElement>;
                 btnStop.forEach((element) => (element.disabled = true));
-                const btnStart: NodeListOf<HTMLButtonElement> = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
+                const btnStart: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
+                    '.btn-start'
+                ) as NodeListOf<HTMLButtonElement>;
                 btnStart.forEach((element) => (element.disabled = false));
-                // location.reload();
             }
         });
     }
@@ -131,7 +132,9 @@ class App {
                             this.requestServer.carRun(`${item.id}`).catch(() => this.view.stopAnimation(`${item.id}`))
                         );
                 });
-                const btnStart: NodeListOf<HTMLButtonElement> = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
+                const btnStart: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
+                    '.btn-start'
+                ) as NodeListOf<HTMLButtonElement>;
                 btnStart.forEach((element) => (element.disabled = true));
                 this.getWinnerCar();
                 this.showWinner();
@@ -141,9 +144,10 @@ class App {
 
     addEventsOnClickButtonGenerate(): void {
         const sectionGarage: HTMLElement = document.querySelector('.section-garage') as HTMLElement;
+        const COUNT_GENERATION_CARS = 100;
         sectionGarage.addEventListener('click', async (btnGenerate) => {
             if ((btnGenerate.target as HTMLElement).classList.contains('btn-generate')) {
-                for (let i = 0; i < 100; i++) {
+                for (let i = 0; i < COUNT_GENERATION_CARS; i++) {
                     this.requestServer
                         .createCar(this.generate.getRandomName(), this.generate.getRandomColor())
                         .then(() => this.view.addTrack(this.requestServer.getCars()));
@@ -159,7 +163,9 @@ class App {
                 Animations.recordsAnimation.forEach((item) =>
                     this.view.startAnimation(`${item.id}`, this.requestServer.startStopEngine(`${item.id}`, 'stopped'))
                 );
-                const btnStart: NodeListOf<HTMLButtonElement> = document.querySelectorAll('.btn-start') as NodeListOf<HTMLButtonElement>;
+                const btnStart: NodeListOf<HTMLButtonElement> = document.querySelectorAll(
+                    '.btn-start'
+                ) as NodeListOf<HTMLButtonElement>;
                 btnStart.forEach((element) => (element.disabled = false));
             }
         });
@@ -184,7 +190,6 @@ class App {
             winner.style.display = 'block';
             const nameWin: string | null = localStorage.getItem('nameWin');
             const timeWinner: string | null = localStorage.getItem('timeWinner');
-            console.log(timeWinner);
             winner.textContent = `Winner ${nameWin} time: ${timeWinner}`;
             setTimeout(() => (winner.style.display = 'none'), 4000);
         }, Number(localStorage.getItem('timeWinner')) * 1000);

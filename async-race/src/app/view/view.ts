@@ -4,6 +4,7 @@ import changeData from '../data/changeData';
 import { cars, engine, records, winItem } from '../types/types';
 import Animations from '../data/animation';
 import RequestServer from '../control/requestsServer';
+const NUMBER_CHILDREN_FOR_FILL = 5;
 
 class View {
     body: HTMLBodyElement | null;
@@ -130,7 +131,7 @@ class View {
         const btnRemove: HTMLElement = this.createElem(view.html.btn, view.css.btnRemove, view.text.btnRemove);
         const flagFinish: HTMLElement = this.createElem(view.html.div, view.css.flag);
         divTrack.append(btnStart, btnStop, btnSelect, btnRemove, spanCarName, carImage, flagFinish);
-        (divTrack.children[5].children[0].children[0] as HTMLElement).style.fill = carColor;
+        (divTrack.children[NUMBER_CHILDREN_FOR_FILL].children[0].children[0] as HTMLElement).style.fill = carColor;
         containerTracks.append(divTrack);
         btnStop.disabled = true;
     }
@@ -175,6 +176,8 @@ class View {
     async startAnimation(id: string, carEnginData: Promise<engine>): Promise<void> {
         const carFeature: engine = await carEnginData;
         const carBlock: HTMLElement = document.getElementById(id) as HTMLElement;
+        const WIDTH_CAR = 100;
+        const CONVERSION_TO_SECONDS = 1000;
         if (carFeature.velocity === 0) {
             const newRecordsAnimation: records[] = [];
             Animations.recordsAnimation.forEach((item) => {
@@ -185,18 +188,22 @@ class View {
                 }
             });
             Animations.recordsAnimation = newRecordsAnimation;
-            (carBlock.children[5].children[0] as HTMLElement).style.left = '0';
+            (carBlock.children[NUMBER_CHILDREN_FOR_FILL].children[0] as HTMLElement).style.left = '0';
             return;
         }
         const time: number = carFeature.distance / carFeature.velocity;
-        const distance: number = +(carBlock.children[5] as HTMLElement).offsetWidth - 100;
-        const anim: Animation = (carBlock.children[5].children[0] as HTMLElement).animate(
+        const distance: number = +(carBlock.children[NUMBER_CHILDREN_FOR_FILL] as HTMLElement).offsetWidth - WIDTH_CAR;
+        const anim: Animation = (carBlock.children[NUMBER_CHILDREN_FOR_FILL].children[0] as HTMLElement).animate(
             [{ left: '0px' }, { left: `${distance}px` }],
             { duration: time, fill: 'forwards' }
         );
         (carBlock.children[0] as HTMLButtonElement).disabled = true;
         (carBlock.children[1] as HTMLButtonElement).disabled = false;
-        Animations.recordsAnimation.push({ id: +id, time: +(time / 1000).toFixed(2), animation: anim });
+        Animations.recordsAnimation.push({
+            id: +id,
+            time: +(time / CONVERSION_TO_SECONDS).toFixed(2),
+            animation: anim,
+        });
         const winnerCarAnimation = Animations.recordsAnimation.sort((a, b) => (a.time < b.time ? -1 : 1));
         const timeWinner: number = winnerCarAnimation[0].time;
         const winnerId: number = winnerCarAnimation[0].id;
@@ -213,8 +220,9 @@ class View {
 
     async stopAnimation(id: string): Promise<void> {
         const carBlock: HTMLElement = document.getElementById(id) as HTMLElement;
-        const carPosition: number = carBlock.children[5].children[0].getBoundingClientRect().left;
-        (carBlock.children[5].children[0] as HTMLElement).style.left = `${carPosition}px`;
+        const carPosition: number =
+            carBlock.children[NUMBER_CHILDREN_FOR_FILL].children[0].getBoundingClientRect().left;
+        (carBlock.children[NUMBER_CHILDREN_FOR_FILL].children[0] as HTMLElement).style.left = `${carPosition}px`;
         Animations.recordsAnimation.forEach((item) => {
             if (item.id === +id) {
                 item.time = Infinity;

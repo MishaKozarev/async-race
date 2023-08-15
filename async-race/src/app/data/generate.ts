@@ -8,14 +8,19 @@ class Generate {
     }
 
     getRandomName(): string {
-        return `${this.carNames[Math.round(Math.random() * 9)]} ${this.carModels[Math.round(Math.random() * 9)]}`;
+        const COUNT_CARS = 9;
+        return `${this.carNames[Math.round(Math.random() * COUNT_CARS)]} ${
+            this.carModels[Math.round(Math.random() * COUNT_CARS)]
+        }`;
     }
 
     getRandomColor(): string {
         const items = '0123456789ABCDEF';
         let color = '#';
-        for (let index = 0; index < 6; index++) {
-            color += items[Math.floor(Math.random() * 16)];
+        const COUNT_CHARS_IN_RGB = 6;
+        const COUNT_COLOR_RANDOM = 16;
+        for (let index = 0; index < COUNT_CHARS_IN_RGB; index++) {
+            color += items[Math.floor(Math.random() * COUNT_COLOR_RANDOM)];
         }
         return color;
     }
